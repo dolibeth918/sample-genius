@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Button, Card, CardSection, Input } from './common';
+import SongDetail from './SongDetail';
 
 class InputForm extends Component {
-  state = { song: '', recievedInput: false, songList: [] };
+  state = { song: '', songPath: '', songInfo: {} };
 
   //this will turn the song being searched into a query format
   querySong(song) {
@@ -16,9 +17,14 @@ class InputForm extends Component {
     const queryString = this.querySong(song);
     axios
       .get(`https://genius.com/api/search?q=${queryString}`)
-      .then(res => res.data);
-    // if the user clicks, then set recieved input to true
-    this.setState({ recievedInput: true });
+      .then(res => {
+        const songPath = res.data.response.hits[0].result.api_path;
+        return this.setState({ songPath });
+      })
+      .then(() => {
+        return axios.get(`https://genius.com/api${this.state.songPath}`);
+      })
+      .then(res => this.setState({ songInfo: res.data.response.song }));
   }
 
   render() {
@@ -33,6 +39,9 @@ class InputForm extends Component {
         </CardSection>
         <CardSection>
           <Button onPress={this.onButtonPress.bind(this)}>Search</Button>
+        </CardSection>
+        <CardSection>
+          <SongDetail songInfo={this.state.songInfo} />
         </CardSection>
       </Card>
     );

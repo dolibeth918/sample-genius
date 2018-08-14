@@ -8,6 +8,7 @@ class App extends Component {
     return (
       <View>
         <Header headerText="Sample Genius" />
+        {/*EVENTUALLY, I WANT TO ADD REDUX SO THAT A CAN CONDITIONALLY RENDER INPUT FORM VS LIST OF SONGS HERE, SINCE I CANT PASS THE SONGS GENERATED FROM INPUT FORM TO SONG LIST UNLESS I RENDER INPUT FORM IN SONG LIST */}
         <InputForm />
       </View>
     );
