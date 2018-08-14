@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Card, CardSection, Input } from './common';
 
 class InputForm extends Component {
-  state = { text: '' };
+  state = { song: '' };
 
   render() {
     return (
@@ -10,8 +10,8 @@ class InputForm extends Component {
         <CardSection>
           <Input
             placeholder={'Enter song name'}
-            value={this.state.text}
-            onChangeText={text => this.setState({ text })}
+            value={this.state.song}
+            onChangesong={song => this.setState({ song })}
           />
         </CardSection>
         <CardSection>
