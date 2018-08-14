@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button, Card, CardSection, Input } from './common';
 
 class InputForm extends Component {
-  state = { song: '' };
+  state = { song: '', recievedInput: false, songList: [] };
 
   //this will turn the song being searched into a query format
   querySong(song) {
@@ -17,6 +17,8 @@ class InputForm extends Component {
     axios
       .get(`https://genius.com/api/search?q=${queryString}`)
       .then(res => res.data);
+    // if the user clicks, then set recieved input to true
+    this.setState({ recievedInput: true });
   }
 
   render() {
