@@ -51,8 +51,8 @@ class InputForm extends Component {
                     key={song.id}
                     onPress={this.onSongPress.bind(this, song)}
                   >
-                    <CardSection>
-                      <SongDetail songInfo={song.result} />
+                    <CardSection key={song.id}>
+                      <SongDetail key={song.id} songInfo={song.result} />
                     </CardSection>
                   </TouchableHighlight>
                 );
