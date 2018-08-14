@@ -4,7 +4,7 @@ import { Card, CardSection } from './common';
 
 const SongDetail = props => {
   const { full_title, song_art_image_thumbnail_url } = props.songInfo;
-
+  const [title, artist] = full_title.split('by');
   const {
     thumbnailStyle,
     headerContentStyle,
@@ -23,7 +23,8 @@ const SongDetail = props => {
           />
         </View>
         <View style={headerContentStyle}>
-          <Text style={headerTextStyle}>{full_title}</Text>
+          <Text style={headerTextStyle}>{title}</Text>
+          <Text>{artist}</Text>
         </View>
       </CardSection>
     </Card>

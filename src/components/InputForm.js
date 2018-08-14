@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Button, Card, CardSection, Input } from './common';
 import SongDetail from './SongDetail';
+import SongList from './SongList';
 
 class InputForm extends Component {
   state = { song: '', songPath: '', songInfo: {} };
@@ -28,6 +29,7 @@ class InputForm extends Component {
   }
 
   render() {
+    console.log(this.state.songInfo);
     return (
       <Card>
         <CardSection>
@@ -40,9 +42,18 @@ class InputForm extends Component {
         <CardSection>
           <Button onPress={this.onButtonPress.bind(this)}>Search</Button>
         </CardSection>
-        <CardSection>
-          <SongDetail songInfo={this.state.songInfo} />
-        </CardSection>
+        {this.state.songInfo.album && (
+          <CardSection>
+            <SongDetail songInfo={this.state.songInfo} />
+          </CardSection>
+        )}
+        {this.state.songInfo.album && (
+          <CardSection>
+            <SongList
+              samples={this.state.songInfo.song_relationships[0].songs}
+            />
+          </CardSection>
+        )}
       </Card>
     );
   }
