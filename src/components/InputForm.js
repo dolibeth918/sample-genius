@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { TouchableHighlight, ScrollView } from 'react-native';
 import { Button, Card, CardSection, Input } from './common';
 import SongDetail from './SongDetail';
 import SongList from './SongList';
 
 class InputForm extends Component {
-  state = { song: '', songPath: '', songInfo: {} };
+  state = { songs: [], songInfo: {}, song: '' };
 
   //this will turn the song being searched into a query format
   querySong(song) {
@@ -16,20 +17,18 @@ class InputForm extends Component {
   onButtonPress() {
     const { song } = this.state;
     const queryString = this.querySong(song);
+    axios.get(`https://genius.com/api/search?q=${queryString}`).then(res => {
+      return this.setState({ songs: res.data.response.hits, songInfo: {} });
+    });
+  }
+
+  onSongPress(selectedSong) {
     axios
-      .get(`https://genius.com/api/search?q=${queryString}`)
-      .then(res => {
-        const songPath = res.data.response.hits[0].result.api_path;
-        return this.setState({ songPath });
-      })
-      .then(() => {
-        return axios.get(`https://genius.com/api${this.state.songPath}`);
-      })
+      .get(`https://genius.com/api${selectedSong.result.api_path}`)
       .then(res => this.setState({ songInfo: res.data.response.song }));
   }
 
   render() {
-    console.log(this.state.songInfo);
     return (
       <Card>
         <CardSection>
@@ -42,11 +41,25 @@ class InputForm extends Component {
         <CardSection>
           <Button onPress={this.onButtonPress.bind(this)}>Search</Button>
         </CardSection>
-        {this.state.songInfo.album && (
-          <CardSection>
-            <SongDetail songInfo={this.state.songInfo} />
-          </CardSection>
-        )}
+
+        {this.state.songs.length > 0 &&
+          !this.state.songInfo.album && (
+            <ScrollView>
+              {this.state.songs.map(song => {
+                return (
+                  <TouchableHighlight
+                    key={song.id}
+                    onPress={this.onSongPress.bind(this, song)}
+                  >
+                    <CardSection>
+                      <SongDetail songInfo={song.result} />
+                    </CardSection>
+                  </TouchableHighlight>
+                );
+              })}
+            </ScrollView>
+          )}
+
         {this.state.songInfo.album && (
           <CardSection>
             <SongList
