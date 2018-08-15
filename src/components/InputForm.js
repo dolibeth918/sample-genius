@@ -43,7 +43,7 @@ class InputForm extends Component {
         </CardSection>
 
         {this.state.songs.length > 0 &&
-          !this.state.songInfo.album && (
+          !this.state.songInfo.api_path && (
             <ScrollView>
               {this.state.songs.map(song => {
                 return (
@@ -60,7 +60,7 @@ class InputForm extends Component {
             </ScrollView>
           )}
 
-        {this.state.songInfo.album && (
+        {this.state.songInfo.api_path && (
           <CardSection>
             <SongList
               samples={this.state.songInfo.song_relationships[0].songs}
