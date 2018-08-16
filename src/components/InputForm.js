@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { TouchableHighlight, ScrollView } from 'react-native';
+import { TouchableOpacity, ScrollView } from 'react-native';
 import { Button, Card, CardSection, Input } from './common';
 import SongDetail from './SongDetail';
 import SongList from './SongList';
@@ -47,14 +47,12 @@ class InputForm extends Component {
             <ScrollView>
               {this.state.songs.map(song => {
                 return (
-                  <TouchableHighlight
+                  <TouchableOpacity
                     key={song.id}
                     onPress={this.onSongPress.bind(this, song)}
                   >
-                    <CardSection key={song.id}>
-                      <SongDetail key={song.id} songInfo={song.result} />
-                    </CardSection>
-                  </TouchableHighlight>
+                    <SongDetail key={song.id} songInfo={song.result} />
+                  </TouchableOpacity>
                 );
               })}
             </ScrollView>
