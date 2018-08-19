@@ -1,12 +1,41 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { TouchableOpacity, ScrollView } from 'react-native';
+import { TouchableOpacity, ScrollView, Linking, Platform } from 'react-native';
 import { Button, Card, CardSection, Input } from './common';
 import SongDetail from './SongDetail';
 import SongList from './SongList';
 
 class InputForm extends Component {
   state = { songs: [], songInfo: {}, song: '' };
+  static navigationOptions = {
+    title: 'Home'
+  };
+
+  componentDidMount() {
+    if (Platform.OS === 'android') {
+      Linking.getInitialURL().then(url => {
+        this.navigate(url);
+      });
+    } else {
+      Linking.addEventListener('url', this.handleOpenURL);
+    }
+  }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleOpenURL);
+  }
+  handleOpenURL = event => {
+    this.navigate(event.url);
+  };
+  navigate = url => {
+    // E
+    const { navigate } = this.props.navigation;
+    const route = url.replace(/.*?:\/\//g, '');
+    const routeName = route.split('/')[0];
+    if (routeName === 'Home') {
+      navigate('Home');
+    }
+  };
 
   //this will turn the song being searched into a query format
   querySong(song) {
@@ -65,6 +94,13 @@ class InputForm extends Component {
             />
           </CardSection>
         )}
+        <CardSection>
+          <Button
+            onPress={() => Linking.openURL('http://localhost:8080/login')}
+          >
+            Log In with Spotify
+          </Button>
+        </CardSection>
       </Card>
     );
   }
