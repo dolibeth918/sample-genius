@@ -40,9 +40,11 @@ app.get('/callback', function(req, res) {
   };
 
   request.post(authOptions, (error, response, body) => {
-    console.log(error);
+    if (error) {
+      console.log(error);
+    }
     let access_token = body.access_token;
-    let uri = 'http://localhost:8081';
+    let uri = 'samplr://Home';
     res.redirect(uri + '?access_token=' + access_token);
   });
 });
