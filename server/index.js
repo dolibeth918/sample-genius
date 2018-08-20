@@ -6,10 +6,6 @@ const request = require('request');
 const redirect_uri =
   process.env.REDIRECT_URI || 'http://localhost:8080/callback';
 
-app.get('/', (req, res, next) => {
-  res.send('you at the spot b');
-});
-
 app.get('/login', (req, res) => {
   res.redirect(
     'https://accounts.spotify.com/authorize?' +
@@ -46,7 +42,6 @@ app.get('/callback', function(req, res) {
   request.post(authOptions, (error, response, body) => {
     console.log(error);
     let access_token = body.access_token;
-    console.log(access_token);
     let uri = 'http://localhost:8081';
     res.redirect(uri + '?access_token=' + access_token);
   });
