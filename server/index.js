@@ -15,7 +15,7 @@ app.get('/login', (req, res) => {
     'https://accounts.spotify.com/authorize?' +
       querystring.stringify({
         response_type: 'code',
-        client_id: '6e8ca31e24324ff88f8aebc99123d8e4',
+        client_id: process.env.SPOTIFY_CLIENT_ID,
         scope: 'user-read-private user-read-email',
         redirect_uri
       })
@@ -46,6 +46,7 @@ app.get('/callback', function(req, res) {
   request.post(authOptions, (error, response, body) => {
     console.log(error);
     let access_token = body.access_token;
+    console.log(access_token);
     let uri = 'http://localhost:8081';
     res.redirect(uri + '?access_token=' + access_token);
   });
