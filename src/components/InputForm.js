@@ -6,7 +6,7 @@ import SongDetail from './SongDetail';
 import SongList from './SongList';
 
 class InputForm extends Component {
-  state = { songs: [], songInfo: {}, song: '' };
+  state = { songs: [], songInfo: {}, song: '', accessToken: '' };
   static navigationOptions = {
     title: 'Home'
   };
@@ -29,9 +29,11 @@ class InputForm extends Component {
   };
   navigate = url => {
     // E
+    this.setState({});
     const { navigate } = this.props.navigation;
-    const route = url.replace(/.*?:\/\//g, '');
-    const routeName = route.split('/')[0];
+    let [routeName, accessToken] = route.split('/');
+    accessToken = accessToken.split('=')[1];
+    this.setState({ accessToken });
     if (routeName === 'Home') {
       navigate('Home');
     }
@@ -58,6 +60,7 @@ class InputForm extends Component {
   }
 
   render() {
+    console.log('logging the state', this.state);
     return (
       <Card>
         <CardSection>
