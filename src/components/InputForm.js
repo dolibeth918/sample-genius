@@ -29,9 +29,9 @@ class InputForm extends Component {
   };
   navigate = url => {
     // E
-    this.setState({});
     const { navigate } = this.props.navigation;
-    let [routeName, accessToken] = route.split('/');
+    const route = url.replace(/.*?:\/\//g, '');
+    let [routeName, accessToken] = route.split('?');
     accessToken = accessToken.split('=')[1];
     this.setState({ accessToken });
     if (routeName === 'Home') {
