@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { TouchableOpacity, ScrollView, Linking, Platform } from 'react-native';
 import { connect } from 'react-redux';
 
@@ -7,9 +6,10 @@ import { Button, Card, CardSection, Input } from './common';
 import SongDetail from './SongDetail';
 import SongList from './SongList';
 import { fetchSongs } from '../redux/songs';
+import { fetchSongInfo } from '../redux/song';
 
 class InputForm extends Component {
-  state = { songInfo: {}, song: '', accessToken: '' };
+  state = { song: '', accessToken: '' };
   static navigationOptions = {
     title: 'Home'
   };
@@ -54,12 +54,6 @@ class InputForm extends Component {
     this.props.fetchSongs(queryString);
   }
 
-  onSongPress(selectedSong) {
-    axios
-      .get(`https://genius.com/api${selectedSong.result.api_path}`)
-      .then(res => this.setState({ songInfo: res.data.response.song }));
-  }
-
   render() {
     return (
       <Card>
@@ -75,13 +69,13 @@ class InputForm extends Component {
         </CardSection>
 
         {this.props.songs.length > 0 &&
-          !this.state.songInfo.api_path && (
+          !this.props.songInfo.api_path && (
             <ScrollView>
               {this.props.songs.map(song => {
                 return (
                   <TouchableOpacity
                     key={song.id}
-                    onPress={this.onSongPress.bind(this, song)}
+                    onPress={this.props.selectSong.bind(this, song)}
                   >
                     <SongDetail key={song.id} songInfo={song.result} />
                   </TouchableOpacity>
@@ -90,10 +84,10 @@ class InputForm extends Component {
             </ScrollView>
           )}
 
-        {this.state.songInfo.api_path && (
+        {this.props.songInfo.api_path && (
           <CardSection>
             <SongList
-              samples={this.state.songInfo.song_relationships[0].songs}
+              samples={this.props.songInfo.song_relationships[0].songs}
             />
           </CardSection>
         )}
@@ -110,12 +104,15 @@ class InputForm extends Component {
 }
 
 const mapStateToProps = state => {
-  return { songs: state.songs };
+  return { songs: state.songs, songInfo: state.song };
 };
 
 const mapDispatchToProps = dispatch => ({
   fetchSongs: searchStr => {
     dispatch(fetchSongs(searchStr));
+  },
+  selectSong: song => {
+    dispatch(fetchSongInfo(song));
   }
 });
 
