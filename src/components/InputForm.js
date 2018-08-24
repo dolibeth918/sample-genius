@@ -51,11 +51,7 @@ class InputForm extends Component {
   onButtonPress() {
     const { song } = this.state;
     const queryString = this.querySong(song);
-    // axios.get(`https://genius.com/api/search?q=${queryString}`).then(res => {
-    //   return this.setState({ songs: res.data.response.hits, songInfo: {} });
-    // });
     this.props.fetchSongs(queryString);
-    // this.setState({ songInfo: {} });
   }
 
   onSongPress(selectedSong) {
