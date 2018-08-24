@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { TouchableOpacity, ScrollView, Linking, Platform } from 'react-native';
+import { connect } from 'react-redux';
+
 import { Button, Card, CardSection, Input } from './common';
 import SongDetail from './SongDetail';
 import SongList from './SongList';
+import { fetchSongs } from '../redux/songs';
 
 class InputForm extends Component {
-  state = { songs: [], songInfo: {}, song: '', accessToken: '' };
+  state = { songInfo: {}, song: '', accessToken: '' };
   static navigationOptions = {
     title: 'Home'
   };
@@ -48,9 +51,11 @@ class InputForm extends Component {
   onButtonPress() {
     const { song } = this.state;
     const queryString = this.querySong(song);
-    axios.get(`https://genius.com/api/search?q=${queryString}`).then(res => {
-      return this.setState({ songs: res.data.response.hits, songInfo: {} });
-    });
+    // axios.get(`https://genius.com/api/search?q=${queryString}`).then(res => {
+    //   return this.setState({ songs: res.data.response.hits, songInfo: {} });
+    // });
+    this.props.fetchSongs(queryString);
+    // this.setState({ songInfo: {} });
   }
 
   onSongPress(selectedSong) {
@@ -60,7 +65,6 @@ class InputForm extends Component {
   }
 
   render() {
-    console.log('logging the state', this.state);
     return (
       <Card>
         <CardSection>
@@ -74,10 +78,10 @@ class InputForm extends Component {
           <Button onPress={this.onButtonPress.bind(this)}>Search</Button>
         </CardSection>
 
-        {this.state.songs.length > 0 &&
+        {this.props.songs.length > 0 &&
           !this.state.songInfo.api_path && (
             <ScrollView>
-              {this.state.songs.map(song => {
+              {this.props.songs.map(song => {
                 return (
                   <TouchableOpacity
                     key={song.id}
@@ -109,4 +113,17 @@ class InputForm extends Component {
   }
 }
 
-export default InputForm;
+const mapStateToProps = state => {
+  return { songs: state.songs };
+};
+
+const mapDispatchToProps = dispatch => ({
+  fetchSongs: searchStr => {
+    dispatch(fetchSongs(searchStr));
+  }
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(InputForm);
