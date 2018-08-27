@@ -27,9 +27,11 @@ class InputForm extends Component {
   componentWillUnmount() {
     Linking.removeEventListener('url', this.handleOpenURL);
   }
+
   handleOpenURL = event => {
     this.navigate(event.url);
   };
+
   navigate = url => {
     // E
     const { navigate } = this.props.navigation;
@@ -91,13 +93,15 @@ class InputForm extends Component {
             />
           </CardSection>
         )}
-        <CardSection>
-          <Button
-            onPress={() => Linking.openURL('http://localhost:8080/login')}
-          >
-            Log In with Spotify
-          </Button>
-        </CardSection>
+        {!this.state.accessToken && (
+          <CardSection>
+            <Button
+              onPress={() => Linking.openURL('http://localhost:8080/login')}
+            >
+              Log In with Spotify
+            </Button>
+          </CardSection>
+        )}
       </Card>
     );
   }
